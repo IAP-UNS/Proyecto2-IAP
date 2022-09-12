@@ -23,6 +23,8 @@ public class GameManager : MonoBehaviour
     private int currentDirection = 0;
     public float speed = 0.2f;
 
+    public GameObject plano;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -68,7 +70,15 @@ public class GameManager : MonoBehaviour
         Vector3Int nuevaPos3 = GetFreePosition();
         laFrutita = Instantiate(fruitGraphic, nuevaPos3, transform.rotation) as GameObject;
         PlaceFrutitaAt(nuevaPos3.x, nuevaPos3.z);
+
+        EstirarPlano();
     }
+
+    public void EstirarPlano()
+    {
+        plano.transform.localScale = new Vector3(4, 1, 4);
+    }
+
 
     private void CheckPlatform()
     {
@@ -96,7 +106,7 @@ public class GameManager : MonoBehaviour
     {
         Vector3Int snakeHead = GetHead();
         snakeHead.z -= 15;
-        snakeHead.y = 20;
+        snakeHead.y =20;
         camarita.transform.position = Vector3.Lerp(camarita.transform.position, snakeHead, 1 * Time.deltaTime);
     }
 
