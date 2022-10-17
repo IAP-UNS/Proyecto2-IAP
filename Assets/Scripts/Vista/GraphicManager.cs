@@ -15,7 +15,6 @@ namespace Vista
         public GameObject panelPerdiste;
         private GameObject currentFruit;
         public GameObject camera;
-        public GameObject panelAndroid;
         public GameObject gameFloor;
         private bool gotFrutita; //indica que agarró una frutita para agrandar la cola
 
@@ -60,6 +59,11 @@ namespace Vista
             currentFruit = Instantiate(fruitGraphic, nuevaPos3, transform.rotation) as GameObject;
             gameManager.PlaceFrutitaAt(nuevaPos3.x, nuevaPos3.z);
             gotFrutita = true;
+        }
+
+        public void MoveFruit()
+        {
+
         }
 
 

@@ -25,28 +25,36 @@ public class GameManager : MonoBehaviour
     {
         Invoke("Execute", inputManager.GetSpeed());
 
-            //init world map
-
-            map = new MapCreator().CreateMap();
-
-            RenderWalls();
-
-        //init snake
-        logicSnake = new LogicSnake();
-        logicSnake.InitSnake(this);
-        graphicManager.InitSnake();
-        Vector3Int nuevaPos = map.GetFreePosition();
-        graphicManager.AddNewSnakeGraphicPart(nuevaPos);
-        UpdateSnakeMatrix(nuevaPos);
-
-        //init fruit
-        Vector3Int nuevaPos3 = map.GetFreePosition();
-        graphicManager.InitFruit(nuevaPos3);
-        map.PlaceFrutitaAt(nuevaPos3.x, nuevaPos3.z);
-
-        graphicManager.EstirarPlano();
+            InitMap();
+            InitSnake();
+            InitFruit();
     }
 
+
+        public void InitMap()
+        {
+            map = new MapCreator().CreateMap();
+            RenderWalls();
+        }
+
+        public void InitSnake()
+        {
+            logicSnake = new LogicSnake();
+            logicSnake.InitSnake(this);
+            graphicManager.InitSnake();
+            Vector3Int nuevaPos = map.GetFreePosition();
+            graphicManager.AddNewSnakeGraphicPart(nuevaPos);
+            UpdateSnakeMatrix(nuevaPos);
+        }
+
+        public void InitFruit()
+        {
+            Vector3Int nuevaPos3 = map.GetFreePosition();
+            graphicManager.InitFruit(nuevaPos3);
+            map.PlaceFrutitaAt(nuevaPos3.x, nuevaPos3.z);
+
+            graphicManager.EstirarPlano();
+        }
 
 
         public void RenderWalls()
@@ -97,15 +105,17 @@ public class GameManager : MonoBehaviour
 
     private void Execute()
     {
+            //nuevaPos es la posición nueva de la cabeza
         Vector3Int nuevaPos= logicSnake.UpdateSnake();
 
-        CheckCollisions();
+        
 
         logicSnake.UpdateSnakeHeadPosition(nuevaPos);
         graphicManager.UpdateSnakeGraphicsWhileMoving();
 
+            CheckCollisions();
 
-        graphicManager.CheckCurrentFruit(logicSnake.GetUltimaPosicion());
+            graphicManager.CheckCurrentFruit(logicSnake.GetUltimaPosicion());
 
         //vuelve a llamar a ejecutar 
         if (!endOfGame) Invoke("Execute", inputManager.GetSpeed());
