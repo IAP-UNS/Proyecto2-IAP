@@ -10,12 +10,14 @@ namespace Modelo
 public class GameManager : MonoBehaviour
 {
     private bool endOfGame = false;
-    private Cell[,] matrix;
+    
 
     public GraphicManager graphicManager;
     public InputManager inputManager;
 
     private LogicSnake logicSnake;
+
+    private Map map;
 
     // Start is called before the first frame update
     void Start()
@@ -23,14 +25,7 @@ public class GameManager : MonoBehaviour
         Invoke("Execute", inputManager.GetSpeed());
 
         //init world map
-        matrix = new Cell[40, 40];
-        for (int i = 0; i < 40; i++)
-        {
-            for (int j = 0; j < 40; j++)
-            {
-                matrix[i, j] = new Cell();
-            }
-        }
+        map = new Map();
 
         //init walls
         for (int i = 0; i < 40; i++)
@@ -44,10 +39,10 @@ public class GameManager : MonoBehaviour
             CreateWall(new Vector3Int(j, 0, 0));
             CreateWall(new Vector3Int(j, 0, 40 - 1));
         }
-        int numberOfRandomWalls = RandomWallValue();
+        int numberOfRandomWalls = map.RandomWallValue();
         for (int i = 0; i < numberOfRandomWalls; i++)
         {
-            Vector3Int nuevaPos2 = GetFreePosition();
+            Vector3Int nuevaPos2 = map.GetFreePosition();
             CreateWall(nuevaPos2);
         }
 
@@ -55,14 +50,14 @@ public class GameManager : MonoBehaviour
         logicSnake = new LogicSnake();
         logicSnake.InitSnake(this);
         graphicManager.InitSnake();
-        Vector3Int nuevaPos = GetFreePosition();
+        Vector3Int nuevaPos = map.GetFreePosition();
         graphicManager.AddNewSnakeGraphicPart(nuevaPos);
         UpdateSnakeMatrix(nuevaPos);
 
         //init fruit
-        Vector3Int nuevaPos3 = GetFreePosition();
+        Vector3Int nuevaPos3 = map.GetFreePosition();
         graphicManager.InitFruit(nuevaPos3);
-        PlaceFrutitaAt(nuevaPos3.x, nuevaPos3.z);
+        map.PlaceFrutitaAt(nuevaPos3.x, nuevaPos3.z);
 
         graphicManager.EstirarPlano();
     }
@@ -82,11 +77,30 @@ public class GameManager : MonoBehaviour
 
     }
 
+    public Vector3Int GetFreePosition()
+    {
+        return map.GetFreePosition();
+    }
 
 
+    public void PlaceSnakePartAt(int r, int c)
+    {
+        map.PlaceSnakePartAt(r, c);
+    }
+    public void FreeSnakePartAt(int r, int c)
+    {
+        map.FreeSnakePartAt(r, c);
+    }
 
+    public void PlaceFrutitaAt(int r, int c)
+    {
+            map.PlaceFrutitaAt(r, c);
+    }
 
-
+    public void FreeFruitAt(int r, int c)
+    {
+            map.FreeFruitAt(r, c);
+    }
 
     private void Execute()
     {
@@ -136,7 +150,7 @@ public class GameManager : MonoBehaviour
     private void CreateWall(Vector3Int nuevaPos)
     {
         graphicManager.CreateGraphicWall(nuevaPos);
-        PlaceWallAt(nuevaPos.x, nuevaPos.z);
+        map.PlaceWallAt(nuevaPos.x, nuevaPos.z);
     }
 
 
@@ -145,7 +159,7 @@ public class GameManager : MonoBehaviour
     private void UpdateSnakeMatrix(Vector3Int nuevaPos)
     {
         logicSnake.AddNewPart(nuevaPos);
-        PlaceSnakePartAt(nuevaPos.x, nuevaPos.z);
+        map.PlaceSnakePartAt(nuevaPos.x, nuevaPos.z);
     }
 
 
@@ -175,106 +189,26 @@ public class GameManager : MonoBehaviour
     }
 
 
-    public void PlaceSnakePartAt(int r, int c)
-    {
-        matrix[r, c].Snake = (new SnakeEntity());
-        //matrixSnake[r, c] = 1;
-    }
-
-    public void PlaceWallAt(int r, int c)
-    {
-        matrix[r, c].Wall = (new WallEntity());
-        //matrixWalls[r, c] = 1;
-    }
-
-    public void PlaceFrutitaAt(int r, int c)
-    {
-        matrix[r, c].Fruit = (new FruitEntity());
-        //matrixFrutitas[r, c] =  1;
-    }
-
-
-
-
-    public bool IsWallAt(int r, int c)
-    {
-        return matrix[r, c].HasWall();
-    }
-
-    public bool IsFruitAt(int r, int c)
-    {
-        return matrix[r, c].HasFruit();
-    }
-
-    public bool IsSnakeAt(int r, int c)
-    {
-        return matrix[r, c].HasSnake();
-    }
+    
 
 
 
 
 
-    public void FreeSnakePartAt(int r, int c)
-    {
-        matrix[r, c].Snake = null;
-    }
-
-    public void FreeFruitAt(int r, int c)
-    {
-        matrix[r, c].Fruit = null;
-    }
-
-
-
-
-
-    public int RandomWallValue()
-    {
-        return Random.Range(50, 50);
-    }
-
-
-
-
-    public Vector3Int GetFreePosition()
-    {
-        bool isAvailable = false;
-        Vector3Int newFreePosition = new Vector3Int(0, 0, 0);
-        while (!isAvailable)
-        {
-            newFreePosition = new Vector3Int(Random.Range(1, 40), 0, Random.Range(1, 40));
-            isAvailable = IsFreeSurroundings(newFreePosition);
-        }
-        return newFreePosition;
-    }
-
-    public bool IsFreeSurroundings(Vector3Int pos)
-    {
-        bool isAvailable = true;
-        for (int i = pos.x - 1; i < pos.x + 1 && isAvailable; i++)
-        {
-            for (int j = pos.z - 1; j < pos.z + 1 && isAvailable; j++)
-            {
-                isAvailable = !IsWallAt(i, j);
-            }
-        }
-        return isAvailable;
-    }
 
     public bool CheckWallsCollision(Vector3Int snakeHead)
     {
-        return IsWallAt(snakeHead.x, snakeHead.z);
+        return map.IsWallAt(snakeHead.x, snakeHead.z);
     }
 
     public bool CheckFruitCollision(Vector3Int snakeHead)
     {
-        return IsFruitAt(snakeHead.x, snakeHead.z);
+        return map.IsFruitAt(snakeHead.x, snakeHead.z);
     }
 
     public bool CheckSnakeCollision(Vector3Int snakeHead)
     {
-        return IsSnakeAt(snakeHead.x, snakeHead.z);
+        return map.IsSnakeAt(snakeHead.x, snakeHead.z);
     }
 
 
