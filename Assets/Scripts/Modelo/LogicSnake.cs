@@ -80,6 +80,11 @@ namespace Modelo
         public void UpdateSnakeHeadPosition(Vector3Int nuevaPos)
         {
             UpdateHeadPosition(nuevaPos);
+            
+        }
+
+        public void UpdateSnakeHeadInMatrix()
+        {
             gameManager.PlaceSnakePartAt(GetHead().x, GetHead().z);
         }
 
@@ -112,7 +117,10 @@ namespace Modelo
             }
         }
 
-        
+        public bool IsMoving()
+        {
+            return currentDirection != 0;
+        }
 
         public void UpdateTailPosition(Vector3Int newPosition)
         {

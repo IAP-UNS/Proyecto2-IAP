@@ -34,7 +34,8 @@ public class MapCreator
 
     private void CreateWall(Map map, Vector3Int nuevaPos)
     {
-        map.PlaceWallAt(nuevaPos.x, nuevaPos.z);
+        //map.PlaceWallAt(nuevaPos.x, nuevaPos.z);
+        map.AddEntityAt(new WallEntity(), nuevaPos.x, nuevaPos.z);
     }
 
   

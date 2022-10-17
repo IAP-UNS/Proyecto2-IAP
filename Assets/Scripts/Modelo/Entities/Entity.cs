@@ -1,8 +1,9 @@
-﻿using System.Collections;
+﻿using Modelo;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Entity 
+public interface Entity 
 {
-    
+    public void Collision(GameManager gm);
 }

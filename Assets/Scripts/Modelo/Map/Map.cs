@@ -37,12 +37,13 @@ public class Map
         {
             for (int j = pos.z - 1; j < pos.z + 1 && isAvailable; j++)
             {
-                isAvailable = !IsWallAt(i, j);
+                isAvailable = matrix[i,j].IsEmpty();
             }//ver cambiar iswallat por isAnythigAt
         }
         return isAvailable;
     }
 
+    /*
     public bool IsWallAt(int r, int c)
     {
         return matrix[r, c].HasWall();
@@ -81,14 +82,27 @@ public class Map
     {
         matrix[r, c].Fruit = null;
     }
+    */
 
+    public void AddEntityAt(Entity e, int x, int z)
+    {
+        matrix[x, z].AddEntity(e);
+    }
 
-
+    public void EmptyCellAt(int x, int z)
+    {
+        matrix[x, z].EmptyCell();
+    }
 
 
     public int RandomWallValue()
     {
         return Random.Range(50, 50);
+    }
+
+    public Cell GetCellAt(int x, int z)
+    {
+        return matrix[x, z];
     }
 
 
@@ -99,7 +113,7 @@ public class Map
         {
             for (int j = 0; j < matrix.GetLength(1); j++)
             {
-                if (IsWallAt(i, j))
+                if (!matrix[i, j].IsEmpty())
                 {
                     walls.Add(new Vector3Int(i, 0, j));
                 }

@@ -30,7 +30,7 @@ namespace Vista
             GameObject nuevoCubito = GameObject.Instantiate(snakeGraphic, ultimaPosicion, snakeGraphic.transform.rotation);
             snakeGraphicParts.Insert(0, nuevoCubito);
 
-            gameManager.PlaceSnakePartAt(ultimaPosicion.x, ultimaPosicion.z);
+            //gameManager.PlaceSnakePartAt(ultimaPosicion.x, ultimaPosicion.z);
         }
 
         public void AddNewSnakeGraphicPart(GameObject snakeGraphic, Vector3Int nuevaPos)
