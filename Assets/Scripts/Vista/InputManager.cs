@@ -1,11 +1,19 @@
+using Modelo;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
-    private int currentDirection = 0;
+    
     public float speed = 0.2f;
+
+    private LogicSnake logicSnake;
+
+    public void SetLogicSnake(LogicSnake ls)
+    {
+        logicSnake = ls;
+    }
 
     public void UpdatePlayer()
     {
@@ -13,19 +21,19 @@ public class InputManager : MonoBehaviour
         //hacer un patrón state y tal vez un command
         if (Input.GetKeyDown(KeyCode.D))
         {
-            if (currentDirection != 3) currentDirection = 1;
+            logicSnake.MoveRight();
         }
         else if (Input.GetKeyDown(KeyCode.W))
         {
-            if (currentDirection != 4) currentDirection = 2;
+            logicSnake.MoveUp();
         }
         else if (Input.GetKeyDown(KeyCode.A))
         {
-            if (currentDirection != 1) currentDirection = 3;
+            logicSnake.MoveLeft();
         }
         else if (Input.GetKeyDown(KeyCode.S))
         {
-            if (currentDirection != 2) currentDirection = 4;
+            logicSnake.MoveDown();
         }
         //mientras se presiona el shift izquierdo, se incrementa la velocidad
         if (Input.GetKeyDown(KeyCode.LeftShift))
@@ -38,10 +46,7 @@ public class InputManager : MonoBehaviour
         }
     }
 
-    public int GetCurrentDirection()
-    {
-        return currentDirection;
-    }
+
 
     public float GetSpeed()
     {

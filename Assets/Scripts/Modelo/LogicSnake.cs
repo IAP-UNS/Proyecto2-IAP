@@ -8,10 +8,11 @@ namespace Modelo
     public class LogicSnake
     {
         private List<Vector3Int> snakePositions;
-        private Vector3Int ultimaPosicion;
-
 
         GameManager gameManager;
+
+        private int currentDirection = 0;
+
 
         public void InitSnake(GameManager gm)
         {
@@ -19,31 +20,54 @@ namespace Modelo
             snakePositions = new List<Vector3Int>();
         }
 
-        public Vector3Int UpdateSnake()
+        public void MoveRight()
         {
-            ultimaPosicion = GetTail();
+            currentDirection = 1;
+        }
+
+        public void MoveUp()
+        {
+            currentDirection = 2;
+        }
+
+        public void MoveLeft()
+        {
+            currentDirection = 3;
+        }
+
+        
+
+        public void MoveDown()
+        {
+            currentDirection = 4;
+        }
+
+        public void UpdateSnake()
+        {
             FreeSnakeTailPosition();
             UpdateSnakePositionsWhileMoving();
-            Vector3Int pos = GetHead();
+            Vector3Int currentHead = GetHead();
 
-            if (gameManager.GetCurrentDirection() == 1)
+            if (currentDirection == 1)
             {
-                pos.x += 1;
+                currentHead.x += 1;
             }
-            else if (gameManager.GetCurrentDirection() == 2)
+            else if (currentDirection == 2)
             {
-                pos.z += 1;
+                currentHead.z += 1;
             }
-            else if (gameManager.GetCurrentDirection() == 3)
+            else if (currentDirection == 3)
             {
-                pos.x -= 1;
+                currentHead.x -= 1;
             }
-            else if (gameManager.GetCurrentDirection() == 4)
+            else if (currentDirection == 4)
             {
-                pos.z -= 1;
+                currentHead.z -= 1;
             }
 
-            return pos;
+            UpdateSnakeHeadPosition(currentHead);
+
+            
         }
 
         private void FreeSnakeTailPosition()
@@ -57,6 +81,11 @@ namespace Modelo
         {
             UpdateHeadPosition(nuevaPos);
             gameManager.PlaceSnakePartAt(GetHead().x, GetHead().z);
+        }
+
+        public void UpdateHeadPosition(Vector3Int newPosition)
+        {
+            snakePositions[snakePositions.Count - 1] = newPosition;
         }
 
 
@@ -83,10 +112,7 @@ namespace Modelo
             }
         }
 
-        public void UpdateHeadPosition(Vector3Int newPosition)
-        {
-            snakePositions[snakePositions.Count - 1] = newPosition;
-        }
+        
 
         public void UpdateTailPosition(Vector3Int newPosition)
         {
@@ -103,10 +129,7 @@ namespace Modelo
             snakePositions.Add(nuevaPos);
         }
 
-        public Vector3Int GetUltimaPosicion()
-        {
-            return ultimaPosicion;
-        }
+
 
     }
 

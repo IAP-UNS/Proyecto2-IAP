@@ -28,6 +28,8 @@ public class GameManager : MonoBehaviour
             InitMap();
             InitSnake();
             InitFruit();
+
+            inputManager.SetLogicSnake(logicSnake);
     }
 
 
@@ -106,16 +108,13 @@ public class GameManager : MonoBehaviour
     private void Execute()
     {
             //nuevaPos es la posición nueva de la cabeza
-        Vector3Int nuevaPos= logicSnake.UpdateSnake();
+        logicSnake.UpdateSnake();
 
-        
-
-        logicSnake.UpdateSnakeHeadPosition(nuevaPos);
         graphicManager.UpdateSnakeGraphicsWhileMoving();
 
             CheckCollisions();
 
-            graphicManager.CheckCurrentFruit(logicSnake.GetUltimaPosicion());
+            graphicManager.CheckCurrentFruit(logicSnake.GetTail());
 
         //vuelve a llamar a ejecutar 
         if (!endOfGame) Invoke("Execute", inputManager.GetSpeed());
@@ -182,10 +181,6 @@ public class GameManager : MonoBehaviour
         inputManager.SetSpeed(0.2f);
     }
 
-    public int GetCurrentDirection()
-    {
-        return inputManager.GetCurrentDirection();
-    }
 
 
     
