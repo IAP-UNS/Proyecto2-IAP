@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using Vista;
 
@@ -24,27 +25,11 @@ public class GameManager : MonoBehaviour
     {
         Invoke("Execute", inputManager.GetSpeed());
 
-        //init world map
-        map = new Map();
+            //init world map
 
-        //init walls
-        for (int i = 0; i < 40; i++)
-        {
-            CreateWall(new Vector3Int(0, 0, i));
-            CreateWall(new Vector3Int(40 - 1, 0, i));
-        }
+            map = new MapCreator().CreateMap();
 
-        for (int j = 0; j < 40; j++)
-        {
-            CreateWall(new Vector3Int(j, 0, 0));
-            CreateWall(new Vector3Int(j, 0, 40 - 1));
-        }
-        int numberOfRandomWalls = map.RandomWallValue();
-        for (int i = 0; i < numberOfRandomWalls; i++)
-        {
-            Vector3Int nuevaPos2 = map.GetFreePosition();
-            CreateWall(nuevaPos2);
-        }
+            RenderWalls();
 
         //init snake
         logicSnake = new LogicSnake();
@@ -64,6 +49,14 @@ public class GameManager : MonoBehaviour
 
 
 
+        public void RenderWalls()
+        {
+            List<Vector3Int> wallsPositions = map.GetWallsPositions();
+            foreach(Vector3Int w in wallsPositions)
+            {
+                graphicManager.CreateGraphicWall(w);
+            }
+        }
 
 
 
@@ -147,11 +140,7 @@ public class GameManager : MonoBehaviour
 
 
 
-    private void CreateWall(Vector3Int nuevaPos)
-    {
-        graphicManager.CreateGraphicWall(nuevaPos);
-        map.PlaceWallAt(nuevaPos.x, nuevaPos.z);
-    }
+
 
 
 

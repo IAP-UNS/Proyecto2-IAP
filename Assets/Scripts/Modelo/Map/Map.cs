@@ -90,4 +90,21 @@ public class Map
     {
         return Random.Range(50, 50);
     }
+
+
+    public List<Vector3Int> GetWallsPositions()
+    {
+        List<Vector3Int> walls = new List<Vector3Int>();
+        for(int i = 0; i < matrix.GetLength(0); i++)
+        {
+            for (int j = 0; j < matrix.GetLength(1); j++)
+            {
+                if (IsWallAt(i, j))
+                {
+                    walls.Add(new Vector3Int(i, 0, j));
+                }
+            }
+        }
+        return walls;
+    }
 }
