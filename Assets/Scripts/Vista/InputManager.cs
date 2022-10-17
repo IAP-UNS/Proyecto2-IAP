@@ -9,6 +9,18 @@ public class InputManager : MonoBehaviour
     public float speed = 0.2f;
 
     private LogicSnake logicSnake;
+    private List<InputCommand> commands;
+
+    private void Start()
+    {
+        commands = new List<InputCommand>();
+        commands.Add(new MoveRightCommand());
+        commands.Add(new MoveUpCommand());
+        commands.Add(new MoveDownCommand());
+        commands.Add(new MoveLeftCommand());
+        commands.Add(new IncreaseSpeedCommand());
+        commands.Add(new ReduceSpeedCommand());
+    }
 
     public void SetLogicSnake(LogicSnake ls)
     {
@@ -17,34 +29,45 @@ public class InputManager : MonoBehaviour
 
     public void UpdatePlayer()
     {
-        //esto quedaría super lindo
-        //hacer un patrón state y tal vez un command
-        if (Input.GetKeyDown(KeyCode.D))
+        foreach(InputCommand ic in commands)
         {
-            logicSnake.MoveRight();
-        }
-        else if (Input.GetKeyDown(KeyCode.W))
-        {
-            logicSnake.MoveUp();
-        }
-        else if (Input.GetKeyDown(KeyCode.A))
-        {
-            logicSnake.MoveLeft();
-        }
-        else if (Input.GetKeyDown(KeyCode.S))
-        {
-            logicSnake.MoveDown();
-        }
-        //mientras se presiona el shift izquierdo, se incrementa la velocidad
-        if (Input.GetKeyDown(KeyCode.LeftShift))
-        {
-            speed = 0.05f;
-        }
-        if (Input.GetKeyUp(KeyCode.LeftShift))
-        {
-            speed = 0.2f;
+            if (ic.CheckCondition())
+            {
+                ic.Execute(this);
+            }
         }
     }
+
+    public void MoveRight()
+    {
+        logicSnake.MoveRight();
+    }
+
+    public void MoveUp()
+    {
+        logicSnake.MoveUp();
+    }
+
+    public void MoveLeft()
+    {
+        logicSnake.MoveLeft();
+    }
+
+    public void MoveDown()
+    {
+        logicSnake.MoveDown();
+    }
+
+    public void IncreaseSpeed()
+    {
+        speed = 0.05f;
+    }
+
+    public void ReduceSpeed()
+    {
+        speed = 0.2f;
+    }
+
 
 
 
