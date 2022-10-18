@@ -38,5 +38,10 @@ namespace Vista
             GameObject nuevoSnakePart = GameObject.Instantiate(snakeGraphic, nuevaPos, snakeGraphic.transform.rotation) as GameObject;
             snakeGraphicParts.Add(nuevoSnakePart);
         }
+
+        public Vector3 GetHead()
+        {
+            return snakeGraphicParts[snakeGraphicParts.Count - 1].transform.position;
+        }
     }
 }

@@ -8,6 +8,11 @@ public class Map
 
     public Map()
     {
+        InitMap();
+    }
+
+    private void InitMap()
+    {
         matrix = new Cell[40, 40];
         for (int i = 0; i < 40; i++)
         {
@@ -18,7 +23,7 @@ public class Map
         }
     }
 
-    public Vector3Int GetFreePosition()
+    public Vector3Int GetRandomFreePosition()
     {
         bool isAvailable = false;
         Vector3Int newFreePosition = new Vector3Int(0, 0, 0);
@@ -38,51 +43,11 @@ public class Map
             for (int j = pos.z - 1; j < pos.z + 1 && isAvailable; j++)
             {
                 isAvailable = matrix[i,j].IsEmpty();
-            }//ver cambiar iswallat por isAnythigAt
+            }
         }
         return isAvailable;
     }
 
-    /*
-    public bool IsWallAt(int r, int c)
-    {
-        return matrix[r, c].HasWall();
-    }
-
-    public bool IsFruitAt(int r, int c)
-    {
-        return matrix[r, c].HasFruit();
-    }
-
-    public bool IsSnakeAt(int r, int c)
-    {
-        return matrix[r, c].HasSnake();
-    }
-
-    public void PlaceSnakePartAt(int r, int c)
-    {
-        matrix[r, c].Snake = (new SnakeEntity());
-    }
-    public void FreeSnakePartAt(int r, int c)
-    {
-        matrix[r, c].Snake = null;
-    }
-
-    public void PlaceWallAt(int r, int c)
-    {
-        matrix[r, c].Wall = (new WallEntity());
-    }
-
-    public void PlaceFrutitaAt(int r, int c)
-    {
-        matrix[r, c].Fruit = (new FruitEntity());
-    }
-
-    public void FreeFruitAt(int r, int c)
-    {
-        matrix[r, c].Fruit = null;
-    }
-    */
 
     public void AddEntityAt(Entity e, int x, int z)
     {
@@ -95,7 +60,7 @@ public class Map
     }
 
 
-    public int RandomWallValue()
+    public int RandomValue()
     {
         return Random.Range(50, 50);
     }

@@ -21,10 +21,10 @@ public class MapCreator
             CreateWall(newMap, new Vector3Int(j, 0, 0));
             CreateWall(newMap, new Vector3Int(j, 0, 40 - 1));
         }
-        int numberOfRandomWalls = newMap.RandomWallValue();
+        int numberOfRandomWalls = newMap.RandomValue();
         for (int i = 0; i < numberOfRandomWalls; i++)
         {
-            Vector3Int nuevaPos2 = newMap.GetFreePosition();
+            Vector3Int nuevaPos2 = newMap.GetRandomFreePosition();
             CreateWall(newMap, nuevaPos2);
         }
 

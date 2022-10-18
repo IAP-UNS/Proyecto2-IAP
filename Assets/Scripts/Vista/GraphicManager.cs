@@ -22,9 +22,17 @@ namespace Vista
 
         private GraphicSnake graphicSnake;
 
+        private void Start()
+        {
+            EstirarPlano();
+        }
 
+        private void Update()
+        {
+            MoveCamera(graphicSnake.GetHead());
+        }
 
-        public void InitFruit(Vector3Int nuevaPos3)
+        public void CreateGraphicFruit(Vector3Int nuevaPos3)
         {
             currentFruit = Instantiate(fruitGraphic, nuevaPos3, transform.rotation) as GameObject;
         }
@@ -35,7 +43,7 @@ namespace Vista
         }
 
 
-        public void MoveCamera(Vector3Int snakeHead)
+        public void MoveCamera(Vector3 snakeHead)
         {
             snakeHead.z -= 15;
             snakeHead.y = 20;
@@ -61,12 +69,7 @@ namespace Vista
             gotFrutita = true;
         }
 
-        public void MoveFruit()
-        {
-
-        }
-
-
+  
         public void CheckCurrentFruit(Vector3Int ultimaPosicion)
         {
             //si agarró frutita se añade un pedaso más a la cola de la serpiente
@@ -90,20 +93,26 @@ namespace Vista
         }
 
 
-        public void AddNewSnakeGraphicPart(Vector3Int nuevaPos)
-        {
-            graphicSnake.AddNewSnakeGraphicPart(snakeGraphic, nuevaPos);
-        }
 
-        public void InitSnake()
+        public void CreateGraphicSnake(Vector3Int nuevaPos)
         {
             graphicSnake = new GraphicSnake();
             graphicSnake.InitSnake();
+            graphicSnake.AddNewSnakeGraphicPart(snakeGraphic, nuevaPos);
         }
 
-        public void UpdateSnakeGraphicsWhileMoving()
+        public void UpdateSnakeGraphics()
         {
             graphicSnake.UpdateSnakeGraphicsWhileMoving(gameManager);
+        }
+
+        public void CreateGraphicWalls(List<Vector3Int> wallsPositions)
+        {
+            //List<Vector3Int> wallsPositions = map.GetWallsPositions();
+            foreach (Vector3Int w in wallsPositions)
+            {
+                CreateGraphicWall(w);
+            }
         }
 
     }

@@ -46,6 +46,18 @@ namespace Modelo
         {
             FreeSnakeTailPosition();
             UpdateSnakePositionsWhileMoving();
+            UpdateSnakeHeadPosition();
+        }
+
+        private void FreeSnakeTailPosition()
+        {
+            gameManager.FreeSnakePartAt(GetTail().x, GetTail().z);
+        }
+
+
+
+        public void UpdateSnakeHeadPosition()
+        {
             Vector3Int currentHead = GetHead();
 
             if (currentDirection == 1)
@@ -64,22 +76,7 @@ namespace Modelo
             {
                 currentHead.z -= 1;
             }
-
-            UpdateSnakeHeadPosition(currentHead);
-
-            
-        }
-
-        private void FreeSnakeTailPosition()
-        {
-            gameManager.FreeSnakePartAt(GetTail().x, GetTail().z);
-        }
-
-
-
-        public void UpdateSnakeHeadPosition(Vector3Int nuevaPos)
-        {
-            UpdateHeadPosition(nuevaPos);
+            UpdateHeadPosition(currentHead);
             
         }
 

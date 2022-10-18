@@ -24,50 +24,64 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         Invoke("Execute", inputManager.GetSpeed());
-
-            InitMap();
-            InitSnake();
-            InitFruit();
-
-            inputManager.SetLogicSnake(logicSnake);
+        InitMap();
+        InitSnake();
+        InitFruit();
+        InitInputManger();    
     }
-
 
         public void InitMap()
         {
             map = new MapCreator().CreateMap();
-            RenderWalls();
+            graphicManager.CreateGraphicWalls(map.GetWallsPositions());
         }
 
         public void InitSnake()
         {
             logicSnake = new LogicSnake();
             logicSnake.InitSnake(this);
-            graphicManager.InitSnake();
-            Vector3Int nuevaPos = map.GetFreePosition();
-            graphicManager.AddNewSnakeGraphicPart(nuevaPos);
-            UpdateSnakeMatrix(nuevaPos);
+            Vector3Int freePosition = map.GetRandomFreePosition();
+            UpdateSnakeMatrix(freePosition);
+            graphicManager.CreateGraphicSnake(freePosition);
         }
 
         public void InitFruit()
         {
-            Vector3Int freePosition = map.GetFreePosition();
-            graphicManager.InitFruit(freePosition);
-            // map.PlaceFrutitaAt(nuevaPos3.x, nuevaPos3.z);
+            Vector3Int freePosition = map.GetRandomFreePosition();
             map.AddEntityAt(new FruitEntity(), freePosition.x, freePosition.z);
-
-            graphicManager.EstirarPlano();
+            graphicManager.CreateGraphicFruit(freePosition);
         }
 
-
-        public void RenderWalls()
+        public void InitInputManger()
         {
-            List<Vector3Int> wallsPositions = map.GetWallsPositions();
-            foreach(Vector3Int w in wallsPositions)
-            {
-                graphicManager.CreateGraphicWall(w);
-            }
+            inputManager.SetLogicSnake(logicSnake);
         }
+
+
+
+        private void Execute()
+        {
+            logicSnake.UpdateSnake();
+
+            graphicManager.UpdateSnakeGraphics();
+
+            CheckCollisions();
+
+            logicSnake.UpdateSnakeHeadInMatrix();
+
+            graphicManager.CheckCurrentFruit(logicSnake.GetTail());
+
+            //vuelve a llamar a ejecutar 
+            if (!endOfGame) Invoke("Execute", inputManager.GetSpeed());
+        }
+
+
+
+
+
+
+
+
 
         public void GetFruit()
         {
@@ -83,18 +97,13 @@ public class GameManager : MonoBehaviour
 
 
 
-    // Update is called once per frame
-    void Update()
-    {
-        inputManager.UpdatePlayer();
 
-        graphicManager.MoveCamera(logicSnake.GetHead());
 
-    }
+
 
     public Vector3Int GetFreePosition()
     {
-        return map.GetFreePosition();
+        return map.GetRandomFreePosition();
     }
 
 
@@ -121,22 +130,7 @@ public class GameManager : MonoBehaviour
             map.EmptyCellAt(r, c);
     }
 
-    private void Execute()
-    {
-            //nuevaPos es la posición nueva de la cabeza
-        logicSnake.UpdateSnake();
 
-        graphicManager.UpdateSnakeGraphicsWhileMoving();
-
-            CheckCollisions();
-
-            logicSnake.UpdateSnakeHeadInMatrix();
-
-            graphicManager.CheckCurrentFruit(logicSnake.GetTail());
-
-        //vuelve a llamar a ejecutar 
-        if (!endOfGame) Invoke("Execute", inputManager.GetSpeed());
-    }
 
 
 
@@ -155,18 +149,7 @@ public class GameManager : MonoBehaviour
                 Cell currentCell = map.GetCellAt(headPosition.x, headPosition.z);
                 currentCell.Collision(this);
             }
-            /*
-        if (CheckFruitCollision(logicSnake.GetHead()))
-        {
-            graphicManager.DestroyFruit();
-            graphicManager.CreateNewFruit();
-        }
-        if (CheckWallsCollision(logicSnake.GetHead())) //agregar colision con la serpiente
-        {
-            endOfGame = true;
-            graphicManager.ActivateEndGame();
-        }
-            */
+
     }
 
 
@@ -215,37 +198,6 @@ public class GameManager : MonoBehaviour
 
 
 
-
-        /*
-    public bool CheckWallsCollision(Vector3Int snakeHead)
-    {
-        return map.IsWallAt(snakeHead.x, snakeHead.z);
-    }
-
-    public bool CheckFruitCollision(Vector3Int snakeHead)
-    {
-        return map.IsFruitAt(snakeHead.x, snakeHead.z);
-    }
-
-    public bool CheckSnakeCollision(Vector3Int snakeHead)
-    {
-        return map.IsSnakeAt(snakeHead.x, snakeHead.z);
-    }
-        */
-
-    ///////////////////////////////////////////////
-    ///Player input stuff
-    ///////////////////////////////////////////////
-    ///
-    
-
-    
-
-
-    ///////////////////////////////////////////////
-    ///Snake stuff
-    ///////////////////////////////////////////////
-    ///
     public Vector3Int GetSnakePartPosition(int i)
     {
         return logicSnake.GetSnakePartPosition(i);

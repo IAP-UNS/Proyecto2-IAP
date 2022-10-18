@@ -22,6 +22,11 @@ public class InputManager : MonoBehaviour
         commands.Add(new ReduceSpeedCommand());
     }
 
+    private void Update()
+    {
+        UpdatePlayer();
+    }
+
     public void SetLogicSnake(LogicSnake ls)
     {
         logicSnake = ls;
