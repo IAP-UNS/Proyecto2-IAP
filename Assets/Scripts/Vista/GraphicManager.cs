@@ -9,7 +9,6 @@ namespace Vista
     public class GraphicManager : MonoBehaviour
     {
 
-
         public GameObject wallGraphic, snakeGraphic, fruitGraphic;
 
         public GameObject panelPerdiste;
@@ -100,7 +99,6 @@ namespace Vista
 
         public void CreateGraphicWalls(List<Vector3Int> wallsPositions)
         {
-            //List<Vector3Int> wallsPositions = map.GetWallsPositions();
             foreach (Vector3Int w in wallsPositions)
             {
                 CreateGraphicWall(w);
