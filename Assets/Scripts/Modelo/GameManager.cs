@@ -49,6 +49,7 @@ public class GameManager : MonoBehaviour
         {
             Vector3Int freePosition = map.GetRandomFreePosition();
             map.AddEntityAt(new FruitEntity(), freePosition.x, freePosition.z);
+            graphicManager.InitGraphicFruit();
             graphicManager.CreateGraphicFruit(freePosition);
         }
 
@@ -69,8 +70,6 @@ public class GameManager : MonoBehaviour
 
             logicSnake.UpdateSnakeHeadInMatrix();
 
-            graphicManager.CheckCurrentFruit(logicSnake.GetTail());
-
             //vuelve a llamar a ejecutar 
             if (!endOfGame) Invoke("Execute", inputManager.GetSpeed());
         }
@@ -83,10 +82,9 @@ public class GameManager : MonoBehaviour
 
 
 
-        public void GetFruit()
+        public void FruitGrabbed()
         {
-            graphicManager.DestroyFruit();
-            graphicManager.CreateNewFruit();
+            graphicManager.FruitGrabbed(logicSnake.GetTail());
         }
 
         public void GameOver()

@@ -13,33 +13,29 @@ namespace Vista
         public GameObject wallGraphic, snakeGraphic, fruitGraphic;
 
         public GameObject panelPerdiste;
-        private GameObject currentFruit;
+
         public GameObject camera;
         public GameObject gameFloor;
-        private bool gotFrutita; //indica que agarró una frutita para agrandar la cola
-
+       
         public GameManager gameManager;
 
         private GraphicSnake graphicSnake;
+        private GraphicFruit graphicFruit;
 
         private void Start()
         {
             EstirarPlano();
         }
 
-        private void Update()
-        {
-            MoveCamera(graphicSnake.GetHead());
-        }
-
-        public void CreateGraphicFruit(Vector3Int nuevaPos3)
-        {
-            currentFruit = Instantiate(fruitGraphic, nuevaPos3, transform.rotation) as GameObject;
-        }
-
         public void EstirarPlano()
         {
             gameFloor.transform.localScale = new Vector3(4, 1, 4);
+        }
+
+
+        private void Update()
+        {
+            MoveCamera(graphicSnake.GetHead());
         }
 
 
@@ -51,34 +47,25 @@ namespace Vista
         }
 
 
-
-
-        public void DestroyFruit()
+        public void CreateGraphicFruit(Vector3Int nuevaPos)
         {
-            int r = (int)currentFruit.transform.position.x;
-            int c = (int)currentFruit.transform.position.z;
-            gameManager.FreeFruitAt(r, c);
-            Destroy(currentFruit);
+            graphicFruit.CreateGraphicFruit(nuevaPos,fruitGraphic);
         }
 
-        public void CreateNewFruit()
+        public void FruitGrabbed(Vector3Int tailPosition)
         {
-            Vector3Int nuevaPos3 = gameManager.GetFreePosition();
-            currentFruit = Instantiate(fruitGraphic, nuevaPos3, transform.rotation) as GameObject;
-            gameManager.PlaceFrutitaAt(nuevaPos3.x, nuevaPos3.z);
-            gotFrutita = true;
+            Vector3Int currentFruitPosition = graphicFruit.GetFruitPosition();
+            gameManager.FreeFruitAt(currentFruitPosition.x, currentFruitPosition.z);
+            graphicFruit.DestroyFruit();
+
+            Vector3Int nuevaPos = gameManager.GetFreePosition();
+            graphicFruit.CreateGraphicFruit(nuevaPos, fruitGraphic);
+            gameManager.PlaceFrutitaAt(nuevaPos.x, nuevaPos.z);
+
+            graphicSnake.AgregarElementoGraficoAlFinalDeLaColaDeLaSerpiente(gameManager, snakeGraphic, tailPosition);
+
         }
 
-  
-        public void CheckCurrentFruit(Vector3Int ultimaPosicion)
-        {
-            //si agarró frutita se añade un pedaso más a la cola de la serpiente
-            if (gotFrutita)
-            {
-                gotFrutita = false;
-                graphicSnake.AgregarElementoGraficoAlFinalDeLaColaDeLaSerpiente(gameManager, snakeGraphic, ultimaPosicion);
-            }
-        }
 
 
         public void ActivateEndGame()
@@ -104,6 +91,11 @@ namespace Vista
         public void UpdateSnakeGraphics()
         {
             graphicSnake.UpdateSnakeGraphicsWhileMoving(gameManager);
+        }
+
+        public void InitGraphicFruit()
+        {
+            graphicFruit = new GraphicFruit();
         }
 
         public void CreateGraphicWalls(List<Vector3Int> wallsPositions)
